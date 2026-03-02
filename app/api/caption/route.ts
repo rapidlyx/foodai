@@ -6,6 +6,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 export const POST = async (req: Request) => {
   try {
     const { prompt, imageURL } = await req.json();
+
     const response = await openai.chat.completions.create({
       model: "gpt-4.1-mini",
       messages: [
@@ -18,15 +19,20 @@ export const POST = async (req: Request) => {
             },
             {
               type: "image_url",
-              image_url: imageURL || "https://example.com/image.jpg",
+              image_url: {
+                url: imageURL,
+              },
             },
           ],
         },
       ],
       max_tokens: 500,
     });
-    return NextResponse.json({ result: "zxc" });
+
+    const result = response.choices[0].message.content;
+
+    return NextResponse.json({ caption: result });
   } catch (error) {
-    return NextResponse.json({ error: "Invalid" }, { status: 500 });
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 };

@@ -75,7 +75,10 @@ export function CaptureImage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ image }),
+        body: JSON.stringify({
+          prompt: "mongol heleer tailbarlajbichne uu",
+          imageURL: image,
+        }),
       });
       if (!response.ok) {
         const errorText = await response.text();
